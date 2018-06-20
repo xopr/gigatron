@@ -33,6 +33,162 @@ $(function() {
     let vgaCanvas = $('#vga-canvas');
     let loadFileInput = $('#load-file-input');
 
+
+    let g_wasm = null;
+    let g_assembly = null;
+
+    let pauseButton = $('#pause-check');
+    let stepButton = $('#step-button');
+    let resetButton = $('#reset-button');
+    let assembleButton = $('#assemble-button');
+    let assembleCheck = $('#auto-assemble');
+    let zeroPadding = $('#zero-padding');
+    let exportAsm = $('#export-asm');
+    let exportHex = $('#export-hex');
+    let exportRom = $('#export-rom');
+
+    function makeRustString(str)
+    {
+	    let bytes = new TextEncoder("utf-8").encode(str)
+	    let ptr = g_wasm.instance.exports.wasm_string_new(bytes.length)
+	    for (let i = 0; i < bytes.length; i++)
+		    g_wasm.instance.exports.wasm_string_set_byte(ptr, i, bytes[i])
+	    return ptr
+    }
+
+    function readRustString(ptr)
+    {
+	    let len = g_wasm.instance.exports.wasm_string_get_len(ptr)
+	    let bytes = []
+	    for (let i = 0; i < len; i++)
+		    bytes.push(g_wasm.instance.exports.wasm_string_get_byte(ptr, i))
+	    let str = new TextDecoder("utf-8").decode(new Uint8Array(bytes))
+	    return str
+    }
+
+    function dropRustString(ptr)
+    {
+	    g_wasm.instance.exports.wasm_string_drop(ptr)
+    }
+
+    function assemble( _code, _type )
+    {
+	    if (g_wasm == null)
+		    return;
+	
+	    let asmPtr = makeRustString( _code );
+	    let outputPtr = null;
+	    try
+	    {
+		    outputPtr = g_wasm.instance.exports.wasm_assemble( _type === 4 ? 2 : _type, asmPtr);
+	    }
+	    catch (e)
+	    {
+		    alert("Error assembling!\n\n" + e);
+		    throw e;
+	    }
+	
+	    let output = readRustString(outputPtr);
+	    dropRustString(asmPtr);
+	    dropRustString(outputPtr);
+
+
+	    if ( output.match( /\x1b\[0m\x1b\[91m/g ) )
+        {
+            console.error( output );
+            return;
+        }
+
+        console.log( output.match(/.{1,4}/g ).join( "\n" ) );
+
+        //let data = new ArrayBuffer( output.length / 2 );
+        //let longInt16View = new Uint16Array( data );
+
+        let romData = new DataView( cpu.rom.buffer );
+        let wordCount = romData.byteLength >> 1;
+
+        if ( zeroPadding.is(":checked") )
+        {
+            for (var i = 0; i < cpu.rom.length; i += 2 )
+            {
+                // convert to host endianess
+                romData.setInt16( i, 2 )
+            }
+        }
+
+        let bytes = 4;
+        for (var i = 0; i < output.length; i += bytes )
+        {
+            // convert to host endianess
+            romData.setInt16( i / 2, parseInt( output.substr(i, bytes), 16), true )
+        }
+
+        if ( _type === 4 )
+        {
+            // TODO: make sure to save as  little endian
+            //var blob = new Blob( [romData], {type: "application/octet-stream"} );
+            var blob = new Blob( [romData], {type: "octet/stream"} );
+            //download( "theloop.2.rom", blob );
+        }
+    }
+
+    let assemblerTextArea = $('#assembler-textarea');
+
+	fetch("customasm.gc.wasm")
+		.then(r => r.arrayBuffer())
+		.then(r => WebAssembly.instantiate(r))
+		.then(wasm =>
+		{
+			g_wasm = wasm
+			//document.getElementById("buttonAssemble").disabled = false
+		})
+
+	fetch("../examples/theloop.asm")
+		.then(r => r.text())
+		.then(r => assemblerTextArea.text(r))
+
+    pauseButton
+        .on('click', (event) => {
+            if ( pauseButton.is(":checked") )
+            {
+                startRunLoop()
+            }
+            else
+            {
+                stopRunLoop();
+                cpu.debugInfo( true );
+            }
+        } )
+
+    stepButton
+        .on('click', (event) => {
+            tick();
+        })
+
+    resetButton
+        .on('click', (event) => {
+            //cpu.reset();
+            cpu.pc = 0;
+            cpu.nextpc = (cpu.pc + 1) & cpu.romMask;
+
+            cpu.debugInfo( !pauseButton.is(":checked") );
+        })
+
+    assembleButton
+        .on('click', (event) => {
+            assemble( assemblerTextArea.val(), 2 ); //download = 4
+        })
+
+    assemblerTextArea
+        .on('keyup', (event) => {
+            if ( assembleCheck.is(":checked") && g_assembly !== assemblerTextArea.val() )
+            {
+                g_assembly = assemblerTextArea.val();
+                assemble( g_assembly, 2 ); //download = 4
+            }
+        })
+
+
     /** Trigger a keydown/keyup event in response to a mousedown/mouseup event
      * @param {JQuery} $button
      * @param {string} key
@@ -181,7 +337,7 @@ $(function() {
     });
     volumeSlider.trigger('input');
 
-    let timer;
+    let timer = null;
 
     /** load a GT1 file
      * @param {File} file
@@ -239,6 +395,18 @@ $(function() {
             }
         });
 
+    // CPU Step
+    function tick()
+    {
+        audio.drain();
+        cpu.tick( true );
+        vga.tick();
+        audio.tick();
+        loader.tick();
+        blinkenLights.tick(); // don't need realtime update
+        gamepad.tick();
+    }
+
     /** start the simulation loop */
     function startRunLoop() {
         gamepad.start();
@@ -280,6 +448,7 @@ $(function() {
     /** stop the simulation loop */
     function stopRunLoop() { // eslint-disable-line
         clearTimeout(timer);
+        timer = null;
         gamepad.stop();
     }
 

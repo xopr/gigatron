@@ -18,6 +18,18 @@
     <script type="module" src="./main.js"></script>
 
     <style>
+        .emulator,
+        .assembler {
+            display: inline-block;
+        }
+        .emulator {
+            float: left;
+        }
+
+        .assembler {
+            float: right;
+        }
+
         kbd {
             background-color: black;
         }
@@ -50,10 +62,10 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="">
         <div class="row mt-3">
             <div class="col">
-                <div class="mx-auto" style="width:640px;">
+                <div class="emulator -mx-auto" style="width:640px;">
 
                     <!-- LOGO -->
                     <a href="https://gigatron.io">
@@ -93,7 +105,7 @@
                     </svg>
 
                     <!-- VGA -->
-                    <canvas id="vga-canvas" class="border border-white rounded p-1" width="640" height="480"></canvas>
+                    <canvas tabindex="0" id="vga-canvas" class="border border-white rounded p-1" width="640" height="480"></canvas>
 
                     <hr>
 
@@ -216,6 +228,20 @@
                         </form>
                     </div>
                 </div>
+                <div class="assembler">
+                    <label><input id="pause-check" type="checkbox" checked="checked"/>Run</label>
+                    <button id="step-button">step</button>
+                    <button id="reset-button">reset</button>
+                    <button id="assemble-button">assemble</button>
+                    <label><input id="auto-assemble" type="checkbox"/>auto</label>
+                    <label><input id="zero-padding" type="checkbox"/>NOP padding</label>
+                    <button id="export-asm">export asm</button>
+                    <button id="export-hex">export hex</button>
+                    <button id="export-rom">export rom</button><br>
+                    <textarea id="assembler-textarea" cols="80" rows="25"></textarea>
+                    <div id="debug"></div>
+                </div>
+
             </div>
         </div>
 

@@ -64,7 +64,7 @@ export class Gamepad {
 
     /** start handling key events */
     start() {
-        $(document)
+        $("#vga-canvas")
             .on('keydown', (event) => {
                 let bit = this.keyMap[event.key];
                 if (bit) {

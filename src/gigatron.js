@@ -36,7 +36,7 @@ export class Gigatron {
     }
 
     /** advance simulation by one tick */
-    tick() {
+    tick( _debug ) {
         let pc = this.pc;
         this.pc = this.nextpc;
         this.nextpc = (this.pc + 1) & this.romMask;
@@ -63,6 +63,82 @@ export class Gigatron {
                 this.branchOp(mode, bus, d);
                 break;
         }
+
+        this.debugInfo( _debug );
+    }
+
+    debugInfo( _debug )
+    {
+        let pc = this.pc;
+        if ( !_debug )
+            return;
+
+        let ir = this.rom[pc];
+        let op = (ir >> 13) & 0x0007;
+        let m = (ir >> 10) & 0x0007;
+        let b = (ir >> 8) & 0x0003;
+        let d = (ir >> 0) & 0x00ff;
+        let bra = ["JMP", "BGT", "BLT", "BNE", "BEQ", "BGE", "BLE", "BRA"][m];
+        //let ram = ["", "RAM", "", ""][bus];
+
+        let operand = ["LD", "ANDA", "ORA", "XORA", "ADDA", "SUBA", "ST", bra][op];
+        let mode = ["[0D] AC", "[0X] AC", "[YD] AC", "[YX] AC", "[0D] X", "[0D] Y", "[0D] OUT", "[YX++] OUT"][m]
+        let bus = ["#D", "RAM", "AC", "IN"][b];
+
+        if ( op === 0 && m === 0 && bus === 2 )
+            operand = "NOP";
+
+        let debug = document.querySelector( "#debug" );
+        debug.innerHTML =   "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" + "<br>" +
+                            "PC: " + pc + " (" + ( "0" + pc.toString(16) ).substr( -2 ) + "), next: " + this.colorize( this.nextpc + " (" + ( "0" + this.nextpc.toString(16) ).substr( -2 ) + ")", ( this.nextpc -1 ) !== pc ) + "<br>" +
+                            "IR: " + ir + " (" + ( "000" + ir.toString(16) ).substr( -4 ) + ")<br>" +
+                            " Operand: " + operand + "<br>" +
+                            " mode: "    + mode + "<br>" +
+                            " bus: "     + bus + "<br>" +
+                            "D: " +   this.colorize( d + " (" + ( "0" + d.toString(16) ).substr( -2 ) + ")", this.oldD !== d ) + "<br>" +
+                            "AC: " +  this.colorize( this.ac + " (" + ( "0" + this.ac.toString(16) ).substr( -2 ) + ")", this.oldAc !== this.ac ) + "<br>" +
+                            "X: " +   this.colorize( this.x + " (" + ( "0" + this.x.toString(16) ).substr( -2 ) + ")", this.oldX !== this.x ) + "<br>" +
+                            "Y: " +   this.colorize( this.y + " (" + ( "0" + this.y.toString(16) ).substr( -2 ) + ")", this.oldY !== this.y ) + "<br>" +
+                            "OUT: " + this.colorize( this.out + " (" + ( "0" + this.out.toString(16) ).substr( -2 ) + ")", this.oldOut !== this.out ) + "<br>" +
+                            "IN: " +  this.colorize( this.inReg + " (" + ( "0" + this.inReg.toString(16) ).substr( -2 ) + ")", this.oldInReg !== this.inReg ) + "<br>" +
+                            "ram: " + this.getRam() + "<br>";
+
+        this.oldD = d;
+        this.oldAc = this.ac;
+        this.oldX = this.x;
+        this.oldY = this.y;
+        this.oldOut = this.out;
+        this.oldInReg = this.inReg;
+
+    }
+
+    colorize( _text, _bRed )
+    {
+        let str = "";
+        if ( _bRed )
+            str += '<span style="color: red">';
+        str += _text;
+        if ( _bRed )
+            str += '</span>';
+
+        return str;
+    }
+
+    getRam()
+    {
+        let ram = "";
+
+        if ( !this.oldRam )
+            this.oldRam = [];
+
+        for ( let x = 0; x < 16; ++x )
+        {
+            ram += this.colorize( ( "0" + this.ram[x].toString(16) ).substr( -2 ) + " ", this.oldRam[ x ] !== this.ram[x] );
+            this.oldRam[ x ] = this.ram[x];
+        }
+
+
+        return ram;
     }
 
     /** perform an alu op
