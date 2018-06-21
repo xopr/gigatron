@@ -249,27 +249,6 @@
 }
 
 
-;Code samples:
-; This is a comment. Comments start with ; and are not read by the assembler
-
-
-; Hello world
-; -----------
-    ; Put LED |O*O*| pattern onto the bus (note that it is mirrored)
-    ld  #0b1010             ; Operand onto the bus, load bus into AC
-
-    ; load: operand to bus, ram address [0D] to ALU destunation OUT
-    ; Toggle hSync low and back to high to latch AC into XOUT
-    ld  #0b10000000, out    ; Operand (hSync low) onto the bus, load bus into OUT
-    ld  #0b11000000, out    ; Operand (hSync high) onto the bus, load bus into OUT
-
-    ; Run an empty loop
-endless_loop:
-    bra #endless_loop       ; Jump to direct #label
-    nop                     ; Note that before any branch, the next instruction is already loaded; do a no-operation here
-
-
-
 ; Blinking led
 ; ------------
     ; Point to RAM address 2 via X and set LED |O*O*| pattern at RAM address X
@@ -320,72 +299,4 @@ loop3:
     st x                    ; RAM[X] = AC  (still part of loop2)
     bra #blink              ; Jump to beginning of the blink loop
     nop                     ; No-operation (still part of loop1)
-
-
-
-;read input
-;start_label:
-    ; load: write operand to bus, ram address [0D] to ALU result destination AC
-;    ld  0b1010              ; Put LED |O*O*| pattern onto the bus (note that it is mirrored)
-
-    ; load: operand to bus, ram address [0D] to ALU destination OUT
-;    ld  0b10000000, out     ; Prepare XOUT update, hSync goes down, RGB to black
-;    ld  0b11000000, out     ; hSync goes up, updating XOUT
-
-;hsync is controller + register clock
-;vsync is controller latch
-; after vsync toggle, data is on bus
-
-
-;    st  0x01
-
-read_input:
-
-;load input to bus, output to out
-
-    ld  0b01000000, out     ; vSync goes down (enable input controller latch?)
-
-    ; Shift in bits
-    ;ld  0b00000000, out     ; hSync goes down (clock in bit?)
-    ;ld  0b01000000, out     ; hsync up
-    ;ld  0b00000000, out     ; hSync down
-    ;ld  0b01000000, out     ; hsync up
-    ;ld  0b00000000, out     ; hSync down
-    ;ld  0b01000000, out     ; hsync up
-    ;ld  0b00000000, out     ; hSync down
-    ;ld  0b01000000, out     ; hsync up
-    ;ld  0b00000000, out     ; hSync down
-    ;ld  0b01000000, out     ; hsync up
-    ;ld  0b00000000, out     ; hSync down
-    ;ld  0b01000000, out     ; hsync up
-
-    ld   in                 ; Load input onto bus
-
-    ld  0b10000000, out     ; Prepare XOUT update, hSync goes down, RGB to black
-    ld  0b11000000, out     ; hSync goes up, updating XOUT
-    ld  0b11000000, out     ; vSync up
-
-    bra read_input
-    nop
-
-
-
-; read  bus
-
-
-
-
-
-
-
-;screen output
-
-
-
-;serial output
-
-
-
-
-
 
