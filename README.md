@@ -1,6 +1,8 @@
 Gigatron Simulator / Assembler
 ==============================
 
+This simulator is a quick-hack; a merge between https://github.com/PhilThomas/gigatron and https://github.com/hlorenzi/customasm to allow real-time assembling / debugging of the Gigatron simulator
+
 The simulator loads the ROM using an `XmlHttpRequest`, so the application must be served up over HTTP.
 
 The `package.json` can install an HTTP server, just do:
