@@ -23,8 +23,20 @@ Use the cursor keys for the D-pad.
 GT1 files can be loaded by starting the `Loader` and dropping a `.gt1` file onto the VGA display from File Explorer or Finder.
 
 ## Assembler
-Uncheck "Run" to pause the emulator.
+* Uncheck `Run` to pause the emulator.
+* use one of the `load ..` buttons to load a sample program (including the CPU definition of the Gigatron)
+* Use `assemble` to assemble and upload the instructions
+* `reset` resets the program pointer
+* Use `step` for one clockcycle
+* `auto` will try to assemble and upload automatically after each keypress
+* `NOP` padding pads the rest of the program ROM with 'no-operation' instructions
 
-Use Assemble to assemble and upload the instructions
+### Notes
+* The first section of the assembly (`#cpudef`) is used to translate mnemonics to HEX codes (which are used to create the actual ROM binary)
+* Currently, only the first 16 bytes of RAM are displayed
 
-Use step for one clockcycle
+### TODO:
+* `export asm` button: export the current assembly instructions onto the local harddisk
+* `export hex` button: export the hex (intermediate code) onto the local harddisk
+* `export rom` button: export the binary rom for usage on a real EPROM
+* Look into a way for a hardware acurate input (and allow support for keyboard)

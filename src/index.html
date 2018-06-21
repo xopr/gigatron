@@ -117,14 +117,14 @@
                                 <stop offset="100%" stop-color="black"/>
                             </radialGradient>
                         </defs>
-                    
+
                         <g>
                             <rect x="0" y="0" width="600" height="250" rx="15" ry="15" stroke="#802020" stroke-width="5" fill="#82332f"/>
                             <path d="m 15,30 a 15,15 0 0 1 15,-15 h 180 a 15,15 0 0 1 15,15 v 60 a 15,15 0 0 0 15,15 h 330 a 15,15 0 0 1 15,15 v 100 a 15,15 0 0 1 -15,15 h -540 a 15,15 0 0 1 -15,-15 z" stroke="#f0d0d0" fill="#f7f1db"/>
                             <line x1="15" y1="200" x2="585" y2="200" stroke-width="4" stroke="black"/>
                             <line x1="15" y1="208" x2="585" y2="208" stroke-width="4" stroke="black"/>
                         </g>
-                    
+
                         <g transform="translate(102,150)">
                             <!-- <rect id="dpad" x="-80" y="-80" width="160" height="160" fill="none"/> -->
                             <path d="m-24,-68 a4,4 0 0,1 4,-4 h40 a4,4 0 0,1 4,4 v40 a4,4 0 0,0 4,4 h40 a4,4 0 0,1 4,4 v40 a4,4 0 0,1 -4,4 h-40 a4,4 0 0,0 -4,4 v40 a 4,4 0 0,1 -4,4 h-40 a4,4 0 0,1 -4,-4 v-40 a4,4 0 0,0 -4,-4 h-40 a4,4 0 0,1 -4,-4 v-40 a4,4 0 0,1 4,-4 h40 a4,4 0 0,0 4,-4 z" stroke="#82332f" stroke-width="5" fill="black"/>
@@ -146,23 +146,23 @@
                                 <rect class="gamepad-btn gamepad-btn-down" x="-24" y="-24" width="48" height="48" rx="4" ry="4" fill-opacity="0"/>
                             </g>
                         </g>
-                    
+
                         <g transform="translate(300,190)">
                             <rect x="-100" y="-30" width="200" height="60" rx="30" ry="30" stroke="#82332f" stroke-width="8" fill="#954540"/>
-                    
+
                             <g transform="translate(-45)">
                                 <text x="0" y="-40" font-family="sans-serif" font-size="16" text-anchor="middle" fill="black">SELECT</text>
                                 <rect x="-35" y="-12" width="70" height="24" rx="10" ry="10" fill="#222"/>
                                 <rect class="gamepad-btn gamepad-btn-select" x="-35" y="-12" width="70" height="24" rx="10" ry="10" fill-opacity="0"/>
                             </g>
-                    
+
                             <g transform="translate(45)">
                                 <text x="0" y="-40" font-family="sans-serif" font-size="16" text-anchor="middle" fill="black">START</text>
                                 <rect x="-35" y="-12" width="70" height="24" rx="10" ry="10" fill="#222"/>
                                 <rect class="gamepad-btn gamepad-btn-start" x="-35" y="-12" width="70" height="24" rx="10" ry="10" fill-opacity="0"/>
                             </g>
                         </g>
-                    
+
                         <g transform="translate(450,190)">
                             <g transform="translate(0,-55)">
                                 <circle cx="0" cy="0" r="15" fill="black"/>
@@ -171,7 +171,7 @@
                             <circle cx="0" cy="0" r="30" stroke="#82332f" stroke-width="5" fill="url(#button-gradient)"/>
                             <circle class="gamepad-btn gamepad-btn-a" cx="0" cy="0" r="30" fill-opacity="0"/>
                         </g>
-                    
+
                         <g transform="translate(530,190)">
                             <g transform="translate(0,-55)">
                                 <circle cx="0" cy="0" r="15" fill="black"/>
@@ -229,15 +229,17 @@
                     </div>
                 </div>
                 <div class="assembler">
+                    <button id="load-hello-world">load hello world.asm</button>
+                    <button id="load-blinking-led">load blinking led.asm</button><br/>
                     <label><input id="pause-check" type="checkbox" checked="checked"/>Run</label>
                     <button id="step-button">step</button>
                     <button id="reset-button">reset</button>
                     <button id="assemble-button">assemble</button>
                     <label><input id="auto-assemble" type="checkbox"/>auto</label>
                     <label><input id="zero-padding" type="checkbox"/>NOP padding</label>
-                    <button id="export-asm">export asm</button>
-                    <button id="export-hex">export hex</button>
-                    <button id="export-rom">export rom</button><br>
+                    <button disabled id="export-asm">export asm</button>
+                    <button disabled id="export-hex">export hex</button>
+                    <button disabled id="export-rom">export rom</button><br>
                     <textarea id="assembler-textarea" cols="80" rows="25"></textarea>
                     <div id="debug"></div>
                 </div>

@@ -37,6 +37,9 @@ $(function() {
     let g_wasm = null;
     let g_assembly = null;
 
+
+    let helloWorldButton = $('#load-hello-world');
+    let blinkingLedButton = $('#load-blinking-led');
     let pauseButton = $('#pause-check');
     let stepButton = $('#step-button');
     let resetButton = $('#reset-button');
@@ -75,7 +78,7 @@ $(function() {
     {
 	    if (g_wasm == null)
 		    return;
-	
+
 	    let asmPtr = makeRustString( _code );
 	    let outputPtr = null;
 	    try
@@ -87,7 +90,7 @@ $(function() {
 		    alert("Error assembling!\n\n" + e);
 		    throw e;
 	    }
-	
+
 	    let output = readRustString(outputPtr);
 	    dropRustString(asmPtr);
 	    dropRustString(outputPtr);
@@ -141,11 +144,21 @@ $(function() {
 		{
 			g_wasm = wasm
 			//document.getElementById("buttonAssemble").disabled = false
-		})
+		});
 
-	fetch("../examples/theloop.asm")
-		.then(r => r.text())
-		.then(r => assemblerTextArea.text(r))
+    helloWorldButton
+        .on('click', (event) => {
+            fetch("../examples/hello%20world.asm")
+            .then(r => r.text())
+            .then(r => assemblerTextArea.text(r))
+        } )
+
+    blinkingLedButton
+        .on('click', (event) => {
+            fetch("../examples/blinking%20led.asm")
+            .then(r => r.text())
+            .then(r => assemblerTextArea.text(r))
+        } );
 
     pauseButton
         .on('click', (event) => {
@@ -158,12 +171,12 @@ $(function() {
                 stopRunLoop();
                 cpu.debugInfo( true );
             }
-        } )
+        } );
 
     stepButton
         .on('click', (event) => {
             tick();
-        })
+        });
 
     resetButton
         .on('click', (event) => {
@@ -177,7 +190,7 @@ $(function() {
     assembleButton
         .on('click', (event) => {
             assemble( assemblerTextArea.val(), 2 ); //download = 4
-        })
+        });
 
     assemblerTextArea
         .on('keyup', (event) => {
@@ -186,7 +199,7 @@ $(function() {
                 g_assembly = assemblerTextArea.val();
                 assemble( g_assembly, 2 ); //download = 4
             }
-        })
+        });
 
 
     /** Trigger a keydown/keyup event in response to a mousedown/mouseup event

@@ -1,3 +1,5 @@
+; New to assembly? Scroll down to "Code starts here" for the actual code
+
 #cpudef
 {
     #align 16
@@ -20,7 +22,7 @@
     LD      {d}, Y      -> 0x15 @ d[7:0]
     LD      AC, Y       -> 0x1600
     LD      IN, Y       -> 0x1700
-    
+
     LD      #{d}, OUT   -> 0x18 @ d[7:0]
     LD      {d}, OUT    -> 0x19 @ d[7:0]
     LD      AC, OUT     -> 0x1a00
@@ -50,7 +52,7 @@
     ANDA    {d}, Y      -> 0x35 @ d[7:0]
     ANDA    AC, Y       -> 0x3600
     ANDA    IN, Y       -> 0x3700
-    
+
     ANDA    #{d}, OUT   -> 0x38 @ d[7:0]
     ANDA    {d}, OUT    -> 0x39 @ d[7:0]
     ANDA    AC, OUT     -> 0x3a00
@@ -80,7 +82,7 @@
     ORA     {d}, Y      -> 0x55 @ d[7:0]
     ORA     AC, Y       -> 0x5600
     ORA     IN, Y       -> 0x5700
-    
+
     ORA     #{d}, OUT   -> 0x58 @ d[7:0]
     ORA     {d}, OUT    -> 0x59 @ d[7:0]
     ORA     AC, OUT     -> 0x5a00
@@ -110,7 +112,7 @@
     XORA    {d}, Y      -> 0x75 @ d[7:0]
     XORA    AC, Y       -> 0x7600
     XORA    IN, Y       -> 0x7700
-    
+
     XORA    #{d}, OUT   -> 0x78 @ d[7:0]
     XORA    {d}, OUT    -> 0x79 @ d[7:0]
     XORA    AC, OUT     -> 0x7a00
@@ -140,7 +142,7 @@
     ADDA    {d}, Y      -> 0x95 @ d[7:0]
     ADDA    AC, Y       -> 0x9600
     ADDA    IN, Y       -> 0x9700
-    
+
     ADDA    #{d}, OUT   -> 0x98 @ d[7:0]
     ADDA    {d}, OUT    -> 0x99 @ d[7:0]
     ADDA    AC, OUT     -> 0x9a00
@@ -170,7 +172,7 @@
     SUBA    {d}, Y      -> 0xb5 @ d[7:0]
     SUBA    AC, Y       -> 0xb600
     SUBA    IN, Y       -> 0xb700
-    
+
     SUBA    #{d}, OUT   -> 0xb8 @ d[7:0]
     SUBA    {d}, OUT    -> 0xb9 @ d[7:0]
     SUBA    AC, OUT     -> 0xba00
@@ -249,7 +251,7 @@
 }
 
 
-;Code samples:
+; Code starts here:
 ; This is a comment. Comments start with ; and are not read by the assembler
 
 
