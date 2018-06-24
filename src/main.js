@@ -37,7 +37,7 @@ $(function() {
     let g_wasm = null;
     let g_assembly = null;
 
-
+    let keyboardButton = $('#keyboard-check');
     let helloWorldButton = $('#load-hello-world');
     let blinkingLedButton = $('#load-blinking-led');
     let pauseButton = $('#pause-check');
@@ -145,6 +145,22 @@ $(function() {
 			g_wasm = wasm
 			//document.getElementById("buttonAssemble").disabled = false
 		});
+
+    keyboardButton
+        .on('click', (event) => {
+
+            gamepad.mode = 1 - gamepad.mode;
+            /*
+            if ( keyboardButton.is(":checked") )
+            {
+                gamepad.mode = 1 - gamepad.mode;
+            }
+            else
+            {
+                gamepad.mode = 1 - gamepad.mode;
+            }
+            */
+        } );
 
     helloWorldButton
         .on('click', (event) => {

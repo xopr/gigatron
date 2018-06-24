@@ -53,6 +53,7 @@ export class Gamepad {
         this.enabled = false;
         this.pressed = 0;
         this.keyMap = {};
+        this.mode = 0;
 
         /* build map from keyboard key to controller button name */
         for (let button of Object.keys(keys)) {
@@ -66,17 +67,48 @@ export class Gamepad {
     start() {
         $("#vga-canvas")
             .on('keydown', (event) => {
-                let bit = this.keyMap[event.key];
-                if (bit) {
-                    this.pressed |= bit;
+                if (this.mode )
+                {
+                    if (  event.key.length === 1 )
+                        this.pressed = event.key.charCodeAt(0) ^ 0xff;
+                    else
+                    {
+                        switch ( event.key )
+                        {
+                            case "Enter":
+                                this.pressed = 10 ^ 0xff;
+                                break;
+
+                            case "Backspace":
+                            case "Delete":
+                                this.pressed = 127 ^ 0xff;
+                                break;
+                        }
+                    }
                     event.preventDefault();
+                }
+                else
+                {
+                    let bit = this.keyMap[event.key];
+                    if (bit) {
+                        this.pressed |= bit;
+                        event.preventDefault();
+                    }
                 }
             })
             .on('keyup', (event) => {
-                let bit = this.keyMap[event.key];
-                if (bit) {
-                    this.pressed &= ~bit;
+                if (this.mode )
+                {
+                    this.pressed =  0xff;
                     event.preventDefault();
+                }
+                else
+                {
+                    let bit = this.keyMap[event.key];
+                    if (bit) {
+                        this.pressed &= ~bit;
+                        event.preventDefault();
+                    }
                 }
             });
         this.enabled = true;
