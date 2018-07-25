@@ -22,7 +22,7 @@ const {
 } = rxjs.operators;
 
 const HZ = 6250000;
-const romUrl = 'theloop.2.rom';
+const romUrl = 'ROMv2.rom';
 
 $(function() {
     $('[data-toggle="tooltip"]').tooltip();
@@ -131,7 +131,7 @@ $(function() {
             // TODO: make sure to save as  little endian
             //var blob = new Blob( [romData], {type: "application/octet-stream"} );
             var blob = new Blob( [romData], {type: "octet/stream"} );
-            //download( "theloop.2.rom", blob );
+            //download( "ROMv2.rom", blob );
         }
     }
 

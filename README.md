@@ -9,7 +9,7 @@ The `package.json` can install an HTTP server, just do:
 
     npm install
 
-Download [`theloop.2.rom`](https://github.com/kervinck/gigatron-rom/raw/master/theloop.2.rom) into the `src` directory.
+Download [`ROMv2.rom`](https://github.com/kervinck/gigatron-rom/blob/master/ROMv2.rom) into the `src` directory.
 
 Start the HTTP server
 
